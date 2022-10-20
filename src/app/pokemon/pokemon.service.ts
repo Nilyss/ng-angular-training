@@ -21,6 +21,13 @@ export class PokemonService {
     )
   }
 
+  searchPokemonList(term: string): Observable<Pokemon[]> {
+    return this.http.get<Pokemon[]>(`api/pokemons/?name=${term}`).pipe(
+      tap((res) => this.log(res)),
+      catchError((err) => this.handleError(err, []))
+    )
+  }
+
   updatePokemon(pokemon: Pokemon): Observable<null | undefined> {
     // normalement pokemon mais in-memory retourne toujours null
     const options = {
