@@ -8,6 +8,7 @@ import { PokemonService } from '../pokemon.service'
   templateUrl: './detail-pokemon.component.html',
 })
 export class DetailPokemonComponent implements OnInit {
+  pokemonList: Pokemon[]
   pokemon: Pokemon | undefined
 
   constructor(
@@ -19,15 +20,23 @@ export class DetailPokemonComponent implements OnInit {
   ngOnInit() {
     const pokemonId: string | null = this.route.snapshot.paramMap.get('id')
     if (pokemonId) {
-      this.pokemon = this.pokemonService.getPokemonById(+pokemonId)
+      this.pokemonService
+        .getPokemonById(+pokemonId)
+        .subscribe((pokemon) => (this.pokemon = pokemon))
     }
+  }
+
+  deletePokemon(pokemon: Pokemon) {
+    this.pokemonService
+      .deletePokemonById(pokemon.id)
+      .subscribe(() => this.goToPokemonList())
   }
 
   goToPokemonList() {
     this.router.navigate(['/pokemons'])
   }
 
-  gotToEditPokemon(pokemon: Pokemon) {
-    this.router.navigate(['/edit/pokemon/', pokemon.id])
+  goToEditPokemon(pokemon: Pokemon) {
+    this.router.navigate(['/edit/pokemon', pokemon.id])
   }
 }
